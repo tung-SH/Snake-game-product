@@ -14,8 +14,8 @@
  * 
 */
 
-#include "setting_function.h"
-#include "setting_program.h"
+#include "header/setting_function.h"
+#include "header/setting_program.h"
 #include <stdlib.h>
 #include <string.h>
 
