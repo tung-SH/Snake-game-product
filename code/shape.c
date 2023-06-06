@@ -35,8 +35,6 @@ shape shape_template(char represent_pointV, int num_pointV, point* pointsV) {
 
     result.represent_point = represent_pointV; 
     result.num_point = num_pointV; 
-    
-    result.points = (point*)malloc(MAX_POINT * sizeof(point)); 
     result.points = pointsV; 
 
     #ifdef DEBUG_F7

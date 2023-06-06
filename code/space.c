@@ -52,7 +52,7 @@ void print_space(space spaceV) {
 space space_template(int sizeV) {
     space result; 
 
-    result.size = sizeV; 
+    result.size = (sizeV < 5) ? 5 : sizeV; 
     result.spaces = (char*)malloc(result.size * result.size);
     
 
