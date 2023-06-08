@@ -6,12 +6,14 @@
  *      - cụ thể: tạo giá trị táo; hàm template, random_pos
  * 
  * STATUS: 
- *      - [x]: code chưa hoàn thiện 
- *      - [ ]: code hoàn thành mục đích 
+ *      - [ ]: code chưa hoàn thiện 
+ *      - [X]: code hoàn thành mục đích 
  *      - [ ]: code gặp lỗi tại dòng 
  *              Ghi chú lỗi      
  * 
  * SOURCE: 
+ * 
+ * DEBUG_NUMBER: 5
  * 
 **********************************************/
 #include "maze.c"
@@ -20,7 +22,7 @@
 
 struct apple {
     maze *maze_game_ptr; /* maze of game */ 
-    point pos; /* position of apple */
+    shape body; /* position of apple */
 }; 
 
 typedef struct apple apple; 
@@ -42,10 +44,15 @@ apple apple_template(maze *maze_ptrV) {
         int centre_maze = (((*maze_ptrV).space_game_ptr->size % 2) 
                         + (*maze_ptrV).space_game_ptr->size) / 2; 
         
-        result.pos = point_template(centre_maze, centre_maze); 
+        point* apple_shape = (point*)malloc(sizeof(point)); 
+
+        apple_shape[1 -1] = point_template(centre_maze, centre_maze); 
+
+        result.body = shape_template('@', 1, apple_shape); 
+
     }
     
-    draw_point(result.pos, '@', result.maze_game_ptr->space_game_ptr); 
+    draw_shape(result.body, result.maze_game_ptr->space_game_ptr); 
 
     #ifdef DEBUG_F5
         print_space(*(maze_ptrV->space_game_ptr)); 
@@ -62,9 +69,9 @@ apple apple_template(maze *maze_ptrV) {
 */
 void apple_random(apple *apple_ptrV) {
     int range = (*apple_ptrV).maze_game_ptr->space_game_ptr->size - 1; 
-    (*apple_ptrV).pos = point_template(random(2, range), random(2, range)); 
+    (*apple_ptrV).body.points[1 -1] = point_template(random(2, range), random(2, range)); 
 
-    draw_point((*apple_ptrV).pos, '@', (*apple_ptrV).maze_game_ptr->space_game_ptr); 
+    draw_shape((*apple_ptrV).body, (*apple_ptrV).maze_game_ptr->space_game_ptr); 
 
     #ifdef DEBUG_F5
         print_space(*((*apple_ptrV).maze_game_ptr->space_game_ptr)); 
@@ -80,7 +87,7 @@ maze game_maze;
 apple game_apple; 
 
 int main(void) {
-    game_space = space_template(7); 
+    game_space = space_template(30); 
     game_maze = maze_level_1_template(&game_space); 
     game_apple = apple_template(&game_maze); 
 

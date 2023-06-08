@@ -15,6 +15,17 @@
 */
 #include "space.c"
 
+/***************************
+ * point trong trục tọa độ 
+ * 0 ----------------> Y
+ * |
+ * |
+ * |
+ * |
+ * |
+ * v
+ * X
+*/
 struct point {
     int x; /* coordinate x of point */
     int y; /* coordinate y of point */

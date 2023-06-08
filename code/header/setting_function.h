@@ -17,9 +17,9 @@
 
 #define DEBUG_F3
 
-#define DEBUG_F4
+// #define DEBUG_F4
 
-#define DEBUG_F5
+// #define DEBUG_F5
 
 // #define DEBUG_F6
 
