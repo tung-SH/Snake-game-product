@@ -23,7 +23,7 @@
 
 // #define DEBUG_F6
 
-// #define DEBUG_F7
+#define DEBUG_F7
 
 // #define DEBUG_F8
 

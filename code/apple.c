@@ -28,6 +28,18 @@ struct apple {
 typedef struct apple apple; 
 
 
+/************************************
+ * draw_apple -- vẽ giá trị apple 
+ *      vào không gian của nó 
+ * 
+ * example: 
+ * 
+*/
+void draw_apple(apple appleV) {
+    draw_shape(appleV.body, appleV.maze_game_ptr->space_game_ptr); 
+}
+
+
 /**************************************
  * apple_template -- tạo giá trị mẫu 
  *      vào giá trị táo 
@@ -52,7 +64,7 @@ apple apple_template(maze *maze_ptrV) {
 
     }
     
-    draw_shape(result.body, result.maze_game_ptr->space_game_ptr); 
+    draw_apple(result);  
 
     #ifdef DEBUG_F5
         print_space(*(maze_ptrV->space_game_ptr)); 
@@ -71,7 +83,7 @@ void apple_random(apple *apple_ptrV) {
     int range = (*apple_ptrV).maze_game_ptr->space_game_ptr->size - 1; 
     (*apple_ptrV).body.points[1 -1] = point_template(random(2, range), random(2, range)); 
 
-    draw_shape((*apple_ptrV).body, (*apple_ptrV).maze_game_ptr->space_game_ptr); 
+    draw_apple(*apple_ptrV); 
 
     #ifdef DEBUG_F5
         print_space(*((*apple_ptrV).maze_game_ptr->space_game_ptr)); 

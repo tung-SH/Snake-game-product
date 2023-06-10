@@ -1,17 +1,27 @@
-/****************************
- * shape.c -- giá trị hình dạng của 
- *      vật thể bất kì với kí tự thể hiện 
- *      trong không gian
+/*******************************************
+ * shape.c -- giá trị hình dạng 
  * 
- * PURPOSE:
+ * PURPOSE: 
+ *      - tổng quan: phục vụ tạo hình cho 
+ *          mê cung, quả táo, con rắn cho 
+ *          game 
+ *      - cụ thể:  
  * 
  * STATUS: 
+ *      - [x]: code chưa hoàn thiện 
+ *      - [ ]: code hoàn thành mục đích 
+ *      - [ ]: code gặp lỗi tại dòng 
+ *              Ghi chú lỗi      
  * 
  * SOURCE: 
  * 
- * DEBUG_NUMBER: 7
+ * DEBUG_NUMBER: 
+ *      - PROGRAM: 7
+ *      - FUNCTION: 7
  * 
-*/
+**********************************************/
+
+
 #include "point.c"
 
 const int MAX_POINT = 1000; /* MAX POINT IN SHAPE */
@@ -88,11 +98,61 @@ void draw_shape(shape shapeV, space* space_ptrV) {
     #endif
 }
 
+/************************************
+ * is_pointA_equal_pointB -- kiểm 
+ *      tra điểm B có bằng điểm B 
+ *      hay ko  
+ * 
+ * example: 
+ * 
+*/
+int is_pointA_equal_pointB(point pointA, point pointB) {
+    int result; 
+
+    if (pointA.x == pointB.x && pointA.y == pointB.y) {
+        result = 1; 
+    } else {
+        result = 0; 
+    }
+
+    return result; 
+}
+
+
+/************************************
+ * is_point_belong_to_shape -- kiểm tra
+ *      xem điểm có thuộc shape ko 
+ * 
+ * example: 
+ * 
+*/
+int is_point_belong_to_shape(point pointV, shape shapeV) {
+    int result; 
+
+    result = 0; 
+    for (int i = 1; i <= shapeV.num_point; ++i) {
+        if (is_pointA_equal_pointB(pointV, shapeV.points[i -1])) {
+            result = 1; 
+            break; 
+        }
+    }
+
+    #ifdef DEBUG_F7
+        if (result) {
+            printf("point %s belongs to shape\n%s", point_to_string(pointV), shape_to_string(shapeV));
+        } else {
+            printf("point %s does not belong to shape\n%s", point_to_string(pointV), shape_to_string(shapeV));
+        }
+
+    #endif
+
+    return result; 
+}
 
 #ifdef DEBUG_P7
 
 space game_space; /* create game_space space */
-shape snake; /* create shape snake */
+shape game_snake; /* create shape snake */
 shape game_space_wall; /* create game_space wall */
 
 int main(void) {
@@ -106,10 +166,10 @@ int main(void) {
         snakePos[3 -1] = point_template(4, 4); 
         snakePos[4 -1] = point_template(4, 5);  
 
-        snake = shape_template('*', 4, snakePos);
+        game_snake = shape_template('*', 4, snakePos);
     }
 
-    draw_shape(snake, &game_space); 
+    draw_shape(game_snake, &game_space); 
 
     {
         point wallPos[4];

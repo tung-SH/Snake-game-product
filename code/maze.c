@@ -20,6 +20,17 @@ struct maze {
 
 typedef struct maze maze; 
 
+/************************************
+ * draw_maze -- vẽ giá trị maze vào 
+ *      giá trị không gian 
+ * 
+ * example: 
+ * 
+*/
+void draw_maze(maze mazeV) {
+    draw_shape(mazeV.wall, mazeV.space_game_ptr); 
+}
+
 
 /**********************************
  * maze_level_1_template -- giá trị mê cung 
@@ -80,7 +91,7 @@ maze maze_level_1_template(space *space_ptrV) {
     
     
 
-    draw_shape(result.wall, space_ptrV); 
+    draw_maze(result); 
 
     #ifdef DEBUG_P6
         print_space(*space_ptrV); 

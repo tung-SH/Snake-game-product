@@ -22,6 +22,8 @@
  * 
  * SOURCE: 
  * 
+ * DEBUG_NUMBER: 4, 3
+ * 
 **********************************************/
 #include "apple.c"
 #include <math.h>
@@ -41,6 +43,45 @@ struct snake {
 
 
 typedef struct snake snake; 
+
+/************************************
+ * snake_position -- tính vị trí của 
+ *      rắn  
+ * 
+ * example: 
+ * 
+*/
+point snake_position(snake* snake_ptrV) {
+    point result; 
+
+    result = (*snake_ptrV).head.points[1 -1]; 
+
+    return result; 
+}
+
+/************************************
+ * draw_snake -- vẽ giá trị con rắn 
+ *      vào không gian của nó 
+ * 
+ * example: 
+ * 
+*/
+void draw_snake(snake snakeV) {
+    draw_shape(snakeV.body, snakeV.maze_game_ptr->space_game_ptr);
+
+    #ifdef DEBUG_F4
+        printf("\nAfter draw body\n");
+        print_space(*(snakeV.maze_game_ptr->space_game_ptr)); 
+    #endif
+
+    draw_shape(snakeV.head, snakeV.maze_game_ptr->space_game_ptr);
+
+    #ifdef DEBUG_F4
+        printf("\nAfter draw head\n");
+        print_space(*(snakeV.maze_game_ptr->space_game_ptr)); 
+    #endif
+}
+
 
 /************************************
  * snake_level_1_template -- tạo 
@@ -70,21 +111,7 @@ snake snake_level_1_template(maze *maze_ptrV) {
         result.head = shape_template('+', 1, snake_head); 
     }
 
-
-    draw_shape(result.body, result.maze_game_ptr->space_game_ptr); 
-
-    #ifdef DEBUG_F4
-        printf("After draw body.\n"); 
-        print_space(*(result.maze_game_ptr->space_game_ptr)); 
-    #endif
-
-
-    draw_shape(result.head, result.maze_game_ptr->space_game_ptr); 
-
-    #ifdef DEBUG_F4
-        printf("After draw head.\n"); 
-        print_space(*(result.maze_game_ptr->space_game_ptr)); 
-    #endif
+    draw_snake(result); 
 
     return result; 
 }
@@ -96,51 +123,6 @@ snake snake_level_1_template(maze *maze_ptrV) {
  * 
 */
 void snake_move(snake* snake_ptrV) {
-    point old_tail = (*snake_ptrV).body.points[(*snake_ptrV).body.num_point -1]; 
-    for (int i = 2; i <= (*snake_ptrV).body.num_point; ++i) {
-        (*snake_ptrV).body.points[i -1] = (*snake_ptrV).body.points[i - 1 -1]; 
-    }
-    (*snake_ptrV).body.points[1 -1] = (*snake_ptrV).head.points[1 -1]; 
-
-    switch ((*snake_ptrV).movement_direction) {
-        case RIGHT:
-            ++((*snake_ptrV).head.points[1 -1].y); 
-            break;
-
-        case LEFT:  
-            --((*snake_ptrV).head.points[1 -1].y); 
-            break;
-
-        case UP: 
-            --((*snake_ptrV).head.points[1 -1].x); 
-            break;
-
-        case DOWN:
-            ++((*snake_ptrV).head.points[1 -1].x); 
-            break;
-
-    }
-
-    draw_point(old_tail, ' ', (*snake_ptrV).maze_game_ptr->space_game_ptr); 
-
-    #ifdef DEBUG_F4
-        printf("After fix old tail position.\n"); 
-        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
-    #endif
-
-    draw_shape((*snake_ptrV).body, (*snake_ptrV).maze_game_ptr->space_game_ptr); 
-    
-    #ifdef DEBUG_F4
-        printf("After draw new shape.\n"); 
-        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
-    #endif
-
-    draw_shape((*snake_ptrV).head, (*snake_ptrV).maze_game_ptr->space_game_ptr); 
-
-    #ifdef DEBUG_F4
-        printf("After draw new head.\n"); 
-        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
-    #endif
 
 }
 
@@ -195,59 +177,27 @@ void snake_turn_down(snake* snake_ptrV) {
  * 
 */
 void snake_grow(snake* snake_ptrV) {
-    ++((*snake_ptrV).body.num_point); 
-    for (int i = 2; i <= (*snake_ptrV).body.num_point; ++i) {
-        (*snake_ptrV).body.points[i -1] = (*snake_ptrV).body.points[i - 1 -1]; 
-    }
-    (*snake_ptrV).body.points[1 -1] = (*snake_ptrV).head.points[1 -1]; 
 
+}
 
-
-
-    switch ((*snake_ptrV).movement_direction) {
-        case RIGHT:
-            ++((*snake_ptrV).head.points[1 -1].y); 
-            break;
-
-        case LEFT:  
-            --((*snake_ptrV).head.points[1 -1].y); 
-            break;
-
-        case UP: 
-            --((*snake_ptrV).head.points[1 -1].x); 
-            break;
-
-        case DOWN:
-            ++((*snake_ptrV).head.points[1 -1].x); 
-            break;
-
-    }
-
-     
-
-    #ifdef DEBUG_F4
-        printf("After fix old tail position.\n"); 
-        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
-    #endif
-
-    draw_shape((*snake_ptrV).body, (*snake_ptrV).maze_game_ptr->space_game_ptr); 
+/************************************
+ * snake_is_going_crush_maze -- kiểm 
+ *      tra giá tri rắn có chuẩn bị 
+ *      đụng tường ko
+ * 
+ * example: 
+ * 
+*/
+int snake_is_going_crush_maze(snake* snake_ptrV) {
+    // x axis 
     
-    #ifdef DEBUG_F4
-        printf("After draw new shape.\n"); 
-        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
-    #endif
-
-    draw_shape((*snake_ptrV).head, (*snake_ptrV).maze_game_ptr->space_game_ptr); 
-
-    #ifdef DEBUG_F4
-        printf("After draw new head.\n"); 
-        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
-    #endif
-
 }
 
 
 #ifdef DEBUG_P4
+
+const int SNAKE_SPEED = 350; /* SPEED OF SNAKE IN MILISECONDS */
+const int UP_ARROW = 17; 
 
 space game_space; 
 maze game_maze; 
@@ -286,14 +236,9 @@ int main(void) {
 
 
         clrscr();
-        if (i == 4 || i == 10 || i == 14) {
-            snake_grow(&game_snake); 
-        } else {
-            snake_move(&game_snake); 
-        }
-
+        snake_move(&game_snake); 
         print_space(game_space);
-        wait_1ms(250); 
+        wait_1ms(SNAKE_SPEED); 
         ++i;
     }
 

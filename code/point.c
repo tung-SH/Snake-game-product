@@ -88,6 +88,7 @@ void draw_point(point pointV, char type_point, space* space_ptrV) {
     #endif
 }
 
+
 #ifdef DEBUG_P8
 
 point A, B; /* declare 2 points A and B */
