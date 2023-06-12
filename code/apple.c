@@ -1,19 +1,22 @@
 /*******************************************
- * apple.c -- giá trị táo của game 
+ * apple.c -- giá trị táo cho game rắn 
+ *      săn mồi 
  * 
  * PURPOSE: 
- *      - tổng quan: phục vụ xây dựng game rắn săn mồi 
- *      - cụ thể: tạo giá trị táo; hàm template, random_pos
+ *      - tổng quan: 
+ *      - cụ thể: 
  * 
  * STATUS: 
  *      - [ ]: code chưa hoàn thiện 
- *      - [X]: code hoàn thành mục đích 
+ *      - [x]: code hoàn thành mục đích 
  *      - [ ]: code gặp lỗi tại dòng 
  *              Ghi chú lỗi      
  * 
  * SOURCE: 
  * 
- * DEBUG_NUMBER: 5
+ * DEBUG_NUMBER: 
+ *      - PROGRAM: 5
+ *      - FUNCTION: 14, 13, 12
  * 
 **********************************************/
 #include "maze.c"
@@ -37,6 +40,7 @@ typedef struct apple apple;
 */
 void draw_apple(apple appleV) {
     draw_shape(appleV.body, appleV.maze_game_ptr->space_game_ptr); 
+
 }
 
 
@@ -48,30 +52,93 @@ void draw_apple(apple appleV) {
  * 
 */
 apple apple_template(maze *maze_ptrV) {
-    apple result; 
+    apple result;  
 
     result.maze_game_ptr = maze_ptrV; 
-
-    {
-        int centre_maze = (((*maze_ptrV).space_game_ptr->size % 2) 
-                        + (*maze_ptrV).space_game_ptr->size) / 2; 
-        
-        point* apple_shape = (point*)malloc(sizeof(point)); 
-
-        apple_shape[1 -1] = point_template(centre_maze, centre_maze); 
-
-        result.body = shape_template('@', 1, apple_shape); 
-
-    }
     
-    draw_apple(result);  
+    {
+        int central_maze = result.maze_game_ptr->space_game_ptr->size / 2 + 1; 
+        point *apple_body = (point*)malloc(sizeof(point)); 
+        apple_body[1 -1] = point_template(central_maze, central_maze); 
 
-    #ifdef DEBUG_F5
-        print_space(*(maze_ptrV->space_game_ptr)); 
-    #endif 
+        result.body = shape_template('@', 1, apple_body); 
+    }
+
+    #ifdef DEBUG_F14
+        printf("Apple template:\n");
+        printf("Address of its maze: 0x%x.\n", result.maze_game_ptr);
+        printf("Body:\n%s", shape_to_string(result.body));
+    #endif
+
+    draw_apple(result); 
+
+    #ifdef DEBUG_F14
+        printf("After draw apple template\n"); 
+        print_space(*(result.maze_game_ptr->space_game_ptr));
+    #endif
 
     return result; 
 }
+
+/************************************
+ * apple_to_string -- chuyển đổi giá 
+ *      trị táo thành xâu kí tự
+ * 
+ * example: 
+ * 
+*/
+char* apple_to_string(apple appleV) {
+    char* result; 
+    result = (char*)malloc(MAX_LENGTH); 
+
+    sprintf(result, "----------\nApple:\nAddress of its maze: 0x%x\nBody: \n%s", appleV.maze_game_ptr, shape_to_string(appleV.body)); 
+
+    #ifdef DEBUG_F14
+        printf("Apple to string:\n%s", result); 
+
+    #endif
+
+    return result; 
+}
+/************************************
+ * apple_get_postion -- lấy giá trị 
+ *      vị trí hiện tại của quả táo  
+ * 
+ * example: 
+ * 
+*/
+point apple_get_postion(apple* apple_ptrV) {
+    point result; 
+
+    result = (*apple_ptrV).body.points[1 -1]; 
+
+    #ifdef DEBUG_F13
+        printf("Apple:\n%sHas the position point %s\n", apple_to_string(*apple_ptrV), point_to_string(result)); 
+    #endif
+
+    return result; 
+}
+
+/************************************
+ * apple_set_position -- chỉnh vị trí 
+ *      giá trị táo 
+ * 
+ * example: 
+ * 
+*/
+void apple_set_postion(apple* apple_ptrV, int xV, int yV) {
+    #ifdef DEBUG_F12
+        printf("Position of apple before setting: point %s\n", point_to_string(apple_get_postion(apple_ptrV)));
+    #endif
+
+    (*apple_ptrV).body.points[1 -1].x = xV; 
+    (*apple_ptrV).body.points[1 -1].y = yV; 
+
+    #ifdef DEBUG_F12
+        printf("Position of apple after setting: point %s\n", point_to_string(apple_get_postion(apple_ptrV)));
+    #endif
+}
+
 
 /****************************************
  * apple_random -- random vị trí của táo 
@@ -80,15 +147,9 @@ apple apple_template(maze *maze_ptrV) {
  * 
 */
 void apple_random(apple *apple_ptrV) {
-    int range = (*apple_ptrV).maze_game_ptr->space_game_ptr->size - 1; 
-    (*apple_ptrV).body.points[1 -1] = point_template(random(2, range), random(2, range)); 
+    int size_of_maze = (*apple_ptrV).maze_game_ptr->space_game_ptr->size; 
 
-    draw_apple(*apple_ptrV); 
-
-    #ifdef DEBUG_F5
-        print_space(*((*apple_ptrV).maze_game_ptr->space_game_ptr)); 
-    #endif
-
+    apple_set_postion(apple_ptrV, random(2, size_of_maze - 1), random(2, size_of_maze - 1)); 
 }
 
 
@@ -99,18 +160,9 @@ maze game_maze;
 apple game_apple; 
 
 int main(void) {
-    game_space = space_template(30); 
+    game_space = space_template(7); 
     game_maze = maze_level_1_template(&game_space); 
     game_apple = apple_template(&game_maze); 
-
-    wait_1ms(6000); 
-    clrscr(); 
-    for (int i = 1; i <= 5; ++i) {
-        apple_random(&game_apple); 
-
-        wait_1ms(6000); 
-        clrscr(); 
-    }
 
 
 }

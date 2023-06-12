@@ -1,18 +1,28 @@
-/*************************************
- * point.c -- cơ sở vị trí cho các vật thể 
- *      trong game răn săn mồi 
+/*******************************************
+ * point.c -- giá trị điểm trong không gian 
  * 
- * PURPOSE: tạo cơ sở vị trí cho các vật thể 
- *      như rắn, mê cung, táo trong game 
- *      rắn săn mồi 
+ * PURPOSE: 
+ *      - tổng quan: tạo giá trị điểm 
+ *          để tạo cơ sở cho giá trị hình dáng, 
+ *          sau đó tạo ra mê cung, táo và rắn 
+ * 
+ *      - cụ thể: định nghĩa điểm và 2 hàm cơ bản
+ *                  hàm vẽ điểm vào không gian,
+ *                  hàm so sánh 2 điểm 
  * 
  * STATUS: 
+ *      - [ ]: code chưa hoàn thiện 
+ *      - [x]: code hoàn thành mục đích 
+ *      - [ ]: code gặp lỗi tại dòng 
+ *              Ghi chú lỗi      
  * 
- * SOURCE: https://tinyurl.com/tungsh6
+ * SOURCE: 
  * 
- * DEBUG_NUMBER: 8
+ * DEBUG_NUMBER: 
+ *      - PROGRAM: 8
+ *      - FUNCTION: 19, 18
  * 
-*/
+**********************************************/
 #include "space.c"
 
 /***************************
@@ -46,8 +56,8 @@ point point_template(int xV, int yV) {
     result.x = xV; 
     result.y = yV; 
 
-    #ifdef DEBUG_F8
-        printf("point is (%d, %d).\n", result.x, result.y); 
+    #ifdef DEBUG_F19
+        printf("point template is (%d, %d).\n", result.x, result.y); 
     #endif
 
     return result; 
@@ -66,9 +76,9 @@ char* point_to_string(point pointV) {
     result = (char*)malloc(MAX_LENGTH); 
     sprintf(result, "(%d,%d)", pointV.x, pointV.y); 
 
-    #ifdef DEBUG_F8
-        printf("%s", result); 
-    #endif
+    #ifdef DEBUG_F19
+        printf("point to string is %s.\n", result); 
+    #endif 
 
     return result; 
 }
@@ -83,11 +93,39 @@ void draw_point(point pointV, char type_point, space* space_ptrV) {
         *(space_ptrV->spaces + (pointV.x -1) * space_ptrV->size + pointV.y -1) = type_point; 
     }
 
-    #ifdef DEBUG_F8
+    #ifdef DEBUG_F18
+        printf("After draw point %s.\n", point_to_string(pointV)); 
         print_space(*space_ptrV); 
     #endif
 }
 
+/************************************
+ * is_pointA_equal_pointB -- kiểm 
+ *      tra điểm B có bằng điểm B 
+ *      hay ko  
+ * 
+ * example: 
+ * 
+*/
+int is_pointA_equal_pointB(point pointA, point pointB) {
+    int result; 
+
+    if (pointA.x == pointB.x && pointA.y == pointB.y) {
+        result = 1; 
+    } else {
+        result = 0; 
+    }
+
+    #ifdef DEBUG_F18
+        if (result) {
+            printf("point %s equals to point %s.\n", point_to_string(pointA), point_to_string(pointB)); 
+        } else {
+            printf("point %s does not equal to point %s.\n", point_to_string(pointA), point_to_string(pointB)); 
+        }
+    #endif 
+
+    return result; 
+}
 
 #ifdef DEBUG_P8
 
@@ -95,11 +133,15 @@ point A, B; /* declare 2 points A and B */
 space game_space; 
 
 int main(void) {
-    game_space = space_template(5);
-    A = point_template(1, 4); 
-    draw_point(A, '*', &game_space); 
-    B = point_template(3, 3); 
-    draw_point(B, '*', &game_space); 
+    game_space = space_template(5); 
+    A = point_template(1, 2); 
+    B = point_template(3, 4); 
+
+    draw_point(A, 'A', &game_space); 
+    draw_point(B, 'B', &game_space); 
+
+    is_pointA_equal_pointB(A, point_template(1, 2)); 
+    
 }
 
 #endif

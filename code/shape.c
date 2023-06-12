@@ -17,7 +17,7 @@
  * 
  * DEBUG_NUMBER: 
  *      - PROGRAM: 7
- *      - FUNCTION: 7
+ *      - FUNCTION: 17, 16
  * 
 **********************************************/
 
@@ -47,17 +47,16 @@ shape shape_template(char represent_pointV, int num_pointV, point* pointsV) {
     result.num_point = num_pointV; 
     result.points = pointsV; 
 
-    #ifdef DEBUG_F7
+    #ifdef DEBUG_F17
         printf("---------Shape------------\nRepresent point with '%c'\nNumber of points: %d\nAll points:\n", result.represent_point, result.num_point);
         for (int i = 1; i <= result.num_point; ++i) {
-            printf("%s\n", point_to_string(result.points[i -1]));
+            printf("%d: point %s\n", i, point_to_string(result.points[i -1]));
         }
         printf("--------------------------\n");
     #endif
 
     return result; 
 }
-
 
 /****************************************
  * shape_to_string -- biểu hiện giá trị 
@@ -72,12 +71,13 @@ char* shape_to_string(shape shapeV) {
     sprintf(result, "----------Shape---------\nRepresent point with '%c'\nNumber of points: %d\nAll points:\n", shapeV.represent_point, shapeV.num_point);
     for (int i = 1; i <= shapeV.num_point; ++i) {
         char str[50]; /* middle string */
-        sprintf(str, "%s\n", shapeV.points[i -1]);
+        sprintf(str, "%d: point %s\n", i, point_to_string(shapeV.points[i -1]));
         strcat(result, str);
     }
+    strcat(result, "-----------------------\n"); 
 
-    #ifdef DEBUG_F7
-        printf("%s", result); 
+    #ifdef DEBUG_F17
+        printf("Shape to string:\n%s", result); 
     #endif
 
     return result; 
@@ -93,29 +93,10 @@ void draw_shape(shape shapeV, space* space_ptrV) {
         draw_point(shapeV.points[i -1], shapeV.represent_point, space_ptrV);
     }
 
-    #ifdef DEBUG_F7
+    #ifdef DEBUG_F16
+        printf("The shape need draw is\n%s", shape_to_string(shapeV)); 
         print_space(*space_ptrV); 
     #endif
-}
-
-/************************************
- * is_pointA_equal_pointB -- kiểm 
- *      tra điểm B có bằng điểm B 
- *      hay ko  
- * 
- * example: 
- * 
-*/
-int is_pointA_equal_pointB(point pointA, point pointB) {
-    int result; 
-
-    if (pointA.x == pointB.x && pointA.y == pointB.y) {
-        result = 1; 
-    } else {
-        result = 0; 
-    }
-
-    return result; 
 }
 
 
@@ -137,11 +118,11 @@ int is_point_belong_to_shape(point pointV, shape shapeV) {
         }
     }
 
-    #ifdef DEBUG_F7
+    #ifdef DEBUG_F16
         if (result) {
-            printf("point %s belongs to shape\n%s", point_to_string(pointV), shape_to_string(shapeV));
+            printf("point %s belongs to shape below\n%s", point_to_string(pointV), shape_to_string(shapeV));
         } else {
-            printf("point %s does not belong to shape\n%s", point_to_string(pointV), shape_to_string(shapeV));
+            printf("point %s does not belong to shape below\n%s", point_to_string(pointV), shape_to_string(shapeV));
         }
 
     #endif
@@ -156,34 +137,30 @@ shape game_snake; /* create shape snake */
 shape game_space_wall; /* create game_space wall */
 
 int main(void) {
-    game_space = space_template(7);
+    game_space = space_template(5); 
 
-    
     {
-        point snakePos[4]; 
-        snakePos[1 -1] = point_template(4, 2); 
-        snakePos[2 -1] = point_template(4, 3);
-        snakePos[3 -1] = point_template(4, 4); 
-        snakePos[4 -1] = point_template(4, 5);  
+        point *snake_shape = (point*)malloc(2 * sizeof(point)); 
+        snake_shape[1 -1] = point_template(2, 2); 
+        snake_shape[2 -1] = point_template(2, 3); 
+        game_snake = shape_template('*', 2, snake_shape); 
+    }
 
-        game_snake = shape_template('*', 4, snakePos);
+    {
+        point *wall_shape = (point*)malloc(4 * sizeof(point)); 
+        wall_shape[1 -1] = point_template(1, 1); 
+        wall_shape[2 -1] = point_template(1, 5); 
+        wall_shape[3 -1] = point_template(5, 1); 
+        wall_shape[4 -1] = point_template(5, 5); 
+
+        game_space_wall = shape_template('=', 4, wall_shape); 
     }
 
     draw_shape(game_snake, &game_space); 
-
-    {
-        point wallPos[4];
-        wallPos[1 -1] = point_template(1, 1); 
-        wallPos[2 -1] = point_template(1, 7); 
-        wallPos[3 -1] = point_template(7, 1); 
-        wallPos[4 -1] = point_template(7, 7); 
-
-        game_space_wall = shape_template('=', 4, wallPos);
-    }
-
     draw_shape(game_space_wall, &game_space); 
 
-    
+    is_point_belong_to_shape(point_template(5, 5), game_space_wall); 
+
 
 }
 

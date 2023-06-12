@@ -19,11 +19,11 @@
 
 #define DEBUG_P4
 
-// #define DEBUG_P5
+#define DEBUG_P5
 
 // #define DEBUG_P6
 
-#define DEBUG_P7
+// #define DEBUG_P7
 
 // #define DEBUG_P8
 

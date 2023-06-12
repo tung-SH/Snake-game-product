@@ -1,18 +1,23 @@
-/*****************************************
- * space.c -- tạo giá trị không gian 
+/*******************************************
+ * 
  * 
  * PURPOSE: 
- *      1. tạo giá trị không gian chơi cũng như
- *          hiển thị rắn, táo, mê cung
- *      2. 
+ *      - tổng quan: 
+ *      - cụ thể: 
  * 
  * STATUS: 
+ *      - [ ]: code chưa hoàn thiện 
+ *      - [x]: code hoàn thành mục đích 
+ *      - [ ]: code gặp lỗi tại dòng 
+ *              Ghi chú lỗi      
  * 
- * SOURCE: https://tinyurl.com/tungsh6 
+ * SOURCE: 
  * 
- * DEBUG_NUMBER: 9
+ * DEBUG_NUMBER: 
+ *      - PROGRAM: 9
+ *      - FUNCTION: 20
  * 
-*/
+**********************************************/
 
 #include "header/setting_function.h"
 #include "header/setting_program.h"
@@ -59,7 +64,7 @@ space space_template(int sizeV) {
 
     for (int i = 1; i <= result.size; ++i) {
         for (int j = 1; j <= result.size; ++j) {
-            #ifdef DEBUG_F9
+            #ifdef DEBUG_F20
                 *(result.spaces + (i - 1) * result.size + j - 1) = '0';
             #else 
                 *(result.spaces + (i - 1) * result.size + j - 1) = ' ';
@@ -68,7 +73,7 @@ space space_template(int sizeV) {
         }
     }
 
-    #ifdef DEBUG_F9
+    #ifdef DEBUG_F20
         print_space(result); 
     #endif
 
