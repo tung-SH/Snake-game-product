@@ -6,10 +6,13 @@
  *      - cụ thể: 
  * 
  * STATUS: 
- *      - [x]: code chưa hoàn thiện 
+ *      - [ ]: code chưa hoàn thiện 
  *      - [ ]: code hoàn thành mục đích 
- *      - [ ]: code gặp lỗi tại dòng 
- *              Ghi chú lỗi      
+ *      - [x]: code gặp lỗi tại dòng 465, 448
+ *              Ghi chú lỗi: code chạy ko như mong muốn 
+ *                  - rắn ngay khi ăn táo thì ko grow 
+ *                      mà lại để lại một mẩu đuôi và 
+ *                      giữ nguyên độ dài đuôi       
  * 
  * SOURCE: 
  * 
@@ -403,7 +406,14 @@ void apple_random_without_onto_snake(apple* apple_ptrV, snake* snake_ptrV) {
 
 #ifdef DEBUG_P4
 
-const int SNAKE_SPEED = 350; /* SPEED OF SNAKE IN MILISECONDS */
+const int GAME_SPEED = 150; /* SPEED OF SNAKE IN MILISECONDS */
+const char UP_ARROW = 'w'; 
+const char DOWN_ARROW = 's'; 
+const char LEFT_ARROW = 'a'; 
+const char RIGHT_ARROW = 'd'; 
+const char ESCAPE = 27; 
+
+FILE* debug_file; 
 
 space game_space; 
 maze game_maze; 
@@ -411,20 +421,45 @@ snake game_snake;
 apple game_apple; 
 
 int main(void) {
-    game_space = space_template(8); 
+    game_space = space_template(20); 
     game_maze = maze_level_1_template(&game_space); 
     game_apple = apple_template(&game_maze); 
     game_snake = snake_level_1_template(&game_maze); 
 
-    snake_turn_down(&game_snake); 
-    for (int i = 1; i <= 4; ++i) {
-        if (snake_is_goint_to_eat_apple(&game_snake, &game_apple)) {
-            apple_random_without_onto_snake(&game_apple, &game_snake); 
-            break; 
+    while (1) {
+        if (_kbhit()) { /* IF ANY KEY IS PRESSED */
+            int ch = _getch(); 
+
+            /* CONTROL SNAKE */
+            if (ch == UP_ARROW) {
+                snake_turn_up(&game_snake); 
+            } else if (ch == DOWN_ARROW) {
+                snake_turn_down(&game_snake); 
+            } else if (ch == RIGHT_ARROW) {
+                snake_turn_right(&game_snake); 
+            } else if (ch == LEFT_ARROW) {
+                snake_turn_left(&game_snake); 
+            } else if (ch == ESCAPE) {
+                break;  
+            }
         }
-        snake_move(&game_snake); 
+
+        if (snake_is_going_crush_maze(&game_snake)) {
+            break; /* GAME OVER */
+        } 
+
+        if (snake_is_goint_to_eat_apple(&game_snake, &game_apple)) {
+            snake_grow(&game_snake); 
+            apple_random_without_onto_snake(&game_apple, &game_snake);
+        } else {
+            snake_move(&game_snake);     
+        }
+
+        print_space(game_space); 
+        wait_1ms(GAME_SPEED); 
+        clrscr(); 
     }
-    
+
 
 
     

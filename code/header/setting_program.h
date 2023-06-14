@@ -9,6 +9,12 @@
 
 #include <stdio.h>
 
+/************************************
+ * DEBUGGING đặt trong chương trình 
+ *      chạy
+*/
+#define DEBUG
+
 #define DEBUG_P
 
 #define DEBUG_P1
