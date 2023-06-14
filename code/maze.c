@@ -20,6 +20,8 @@
 **********************************************/
 #include "shape.c"
 
+const char REPRESENT_WALL = '='; 
+
 struct maze {
     shape wall; /* wall of maze */
     space *space_game_ptr; /* space of game */
@@ -79,7 +81,7 @@ maze maze_level_1_template(space *space_ptrV) {
             ++nth; 
         }
 
-        result.wall = shape_template('=', num_point, wall_shape); 
+        result.wall = shape_template(REPRESENT_WALL, num_point, wall_shape); 
 
         #ifdef DEBUG_F15
             printf("Wall template is\n");

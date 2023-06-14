@@ -24,7 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+const char REPRESENT_SPACE = ' '; 
+const char REPRESENT_SPACE_DEBUG = '0'; 
 const long long MAX_LENGTH = 10000; /* MAX LENGTH OF STRING */
 
 struct space {
@@ -65,9 +66,9 @@ space space_template(int sizeV) {
     for (int i = 1; i <= result.size; ++i) {
         for (int j = 1; j <= result.size; ++j) {
             #ifdef DEBUG_F20
-                *(result.spaces + (i - 1) * result.size + j - 1) = '0';
+                *(result.spaces + (i - 1) * result.size + j - 1) = REPRESENT_SPACE_DEBUG;
             #else 
-                *(result.spaces + (i - 1) * result.size + j - 1) = ' ';
+                *(result.spaces + (i - 1) * result.size + j - 1) = REPRESENT_SPACE;
             #endif
              
         }

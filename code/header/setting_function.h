@@ -25,19 +25,19 @@
 
 #define DEBUG_F7
 
-#define DEBUG_F8
+// #define DEBUG_F8
 
-#define DEBUG_F9
+// #define DEBUG_F9
 
-#define DEBUG_F10
+// #define DEBUG_F10
 
-#define DEBUG_F11
+// #define DEBUG_F11
 
-#define DEBUG_F12
+// #define DEBUG_F12
 
-#define DEBUG_F13
+// #define DEBUG_F13
 
-#define DEBUG_F14
+// #define DEBUG_F14
 
 // #define DEBUG_F15
 

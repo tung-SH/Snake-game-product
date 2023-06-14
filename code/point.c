@@ -25,6 +25,40 @@
 **********************************************/
 #include "space.c"
 
+enum direction {UP, DOWN, LEFT, RIGHT}; 
+typedef enum direction direction; 
+
+/************************************
+ * 
+ * 
+ * example: 
+ * 
+*/
+char* direction_to_string(direction directionV) {
+    char* result; 
+
+    result = (char*)malloc(MAX_LENGTH); 
+    switch (directionV) {
+        case RIGHT: 
+            strcpy(result, "right"); 
+            break; 
+
+        case LEFT: 
+            strcpy(result, "left"); 
+            break; 
+
+        case UP: 
+            strcpy(result, "up"); 
+            break; 
+
+        case DOWN: 
+            strcpy(result, "down"); 
+            break; 
+    }
+
+    return result; 
+}
+
 /***************************
  * point trong trục tọa độ 
  * 0 ----------------> Y
@@ -123,6 +157,38 @@ int is_pointA_equal_pointB(point pointA, point pointB) {
             printf("point %s does not equal to point %s.\n", point_to_string(pointA), point_to_string(pointB)); 
         }
     #endif 
+
+    return result; 
+}
+
+/***************************************************
+ * point_move -- giá trị point sau khi đã di chuyển 
+ * 
+ * example: 
+ * 
+*/
+point point_move(direction directionV, point pointV) {
+    point result; 
+
+    switch (directionV) {
+        case RIGHT: 
+            ++(pointV.y); 
+            break;
+
+        case LEFT: 
+            --(pointV.y); 
+            break;
+
+        case DOWN: 
+            ++(pointV.x); 
+            break;
+
+        case UP: 
+            --(pointV.x); 
+            break;
+    }
+
+    result = pointV; 
 
     return result; 
 }

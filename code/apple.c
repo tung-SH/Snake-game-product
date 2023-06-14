@@ -16,12 +16,14 @@
  * 
  * DEBUG_NUMBER: 
  *      - PROGRAM: 5
- *      - FUNCTION: 14, 13, 12
+ *      - FUNCTION: 14, 13, 12, 11
  * 
 **********************************************/
 #include "maze.c"
 #include "header/random.c"
 #include "header/interactive.c"
+
+const char REPRESENT_APPLE = '@'; 
 
 struct apple {
     maze *maze_game_ptr; /* maze of game */ 
@@ -61,7 +63,7 @@ apple apple_template(maze *maze_ptrV) {
         point *apple_body = (point*)malloc(sizeof(point)); 
         apple_body[1 -1] = point_template(central_maze, central_maze); 
 
-        result.body = shape_template('@', 1, apple_body); 
+        result.body = shape_template(REPRESENT_APPLE, 1, apple_body); 
     }
 
     #ifdef DEBUG_F14
@@ -134,8 +136,12 @@ void apple_set_postion(apple* apple_ptrV, int xV, int yV) {
     (*apple_ptrV).body.points[1 -1].x = xV; 
     (*apple_ptrV).body.points[1 -1].y = yV; 
 
+    draw_apple((*apple_ptrV)); 
+
     #ifdef DEBUG_F12
         printf("Position of apple after setting: point %s\n", point_to_string(apple_get_postion(apple_ptrV)));
+        printf("Maze after set position of apple:\n"); 
+        print_space(*((*apple_ptrV).maze_game_ptr->space_game_ptr)); 
     #endif
 }
 
@@ -147,9 +153,18 @@ void apple_set_postion(apple* apple_ptrV, int xV, int yV) {
  * 
 */
 void apple_random(apple *apple_ptrV) {
-    int size_of_maze = (*apple_ptrV).maze_game_ptr->space_game_ptr->size; 
+    #ifdef DEBUG_F11 
+        printf("Maze before random position of apple %s:\n", point_to_string(apple_get_postion(apple_ptrV))); 
+        print_space(*((*apple_ptrV).maze_game_ptr->space_game_ptr)); 
+    #endif
 
+    int size_of_maze = (*apple_ptrV).maze_game_ptr->space_game_ptr->size; 
     apple_set_postion(apple_ptrV, random(2, size_of_maze - 1), random(2, size_of_maze - 1)); 
+
+    #ifdef DEBUG_F11 
+        printf("Maze after random position of apple %s:\n", point_to_string(apple_get_postion(apple_ptrV))); 
+        print_space(*((*apple_ptrV).maze_game_ptr->space_game_ptr)); 
+    #endif
 }
 
 
@@ -160,10 +175,13 @@ maze game_maze;
 apple game_apple; 
 
 int main(void) {
-    game_space = space_template(7); 
+    game_space = space_template(11); 
     game_maze = maze_level_1_template(&game_space); 
+
     game_apple = apple_template(&game_maze); 
 
+    apple_random(&game_apple); 
+    apple_random(&game_apple); 
 
 }
 
