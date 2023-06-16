@@ -385,6 +385,23 @@ int snake_is_goint_to_eat_apple(snake* snake_ptrV, apple* apple_ptrV) {
     return result; 
 }
 
+/************************************
+ * snake_is_going_to_eat_itself -- kiểm 
+ *      tra xem rắn có chuẩn bị ăn chính 
+ *      nó hay ko
+ * 
+ * example: 
+ * 
+*/
+int snake_is_goint_to_eat_itself(snake* snake_ptrV) {
+    int result; 
+
+    result = is_point_belong_to_shape(snake_get_upcomming_position(snake_ptrV), (*snake_ptrV).body); 
+
+    return result; 
+}
+
+
 /********************************************
  * apple_random_without_onto_snake -- random 
  *      vị trí của táo mà ko random nhầm vị trí
@@ -452,6 +469,10 @@ int main(void) {
         if (snake_is_going_crush_maze(&game_snake)) {
             break; 
         } 
+
+        if (snake_is_goint_to_eat_itself(&game_snake)) {
+            break; 
+        }
 
         if (snake_is_goint_to_eat_apple(&game_snake, &game_apple)) {
 

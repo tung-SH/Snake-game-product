@@ -3,9 +3,7 @@
 Phục vụ mục đích giải trí, nâng cao tay nghề cho lập trình viên Nguyễn Thanh Tùng.
 
 ## 2. Chương trình hoạt động như thế nào
-- ghi chú: mình sẽ ghi phần này sau khi tạo ra menu 
-
-- thắc mắc: mình muốn ghi vào đây bố cục file nè, và từng file gồm các giá trị đã được định nghĩa cũng như các hàm nào
+Chạy file main.c và sau đó làm theo hướng dẫn trên màn hình console 
 
 ## 3. Chưa biết đặt tên gì cho phần này 
 ![[Sơ đồ file.png]]

@@ -9,21 +9,15 @@
 
 #include <stdio.h>
 
-/************************************
- * DEBUGGING đặt trong chương trình 
- *      chạy
-*/
-#define DEBUG
-
 #define DEBUG_P
 
 #define DEBUG_P1
 
-#define DEBUG_P2
+// #define DEBUG_P2
 
-#define DEBUG_P3
+// #define DEBUG_P3
 
-#define DEBUG_P4
+// #define DEBUG_P4
 
 // #define DEBUG_P5
 
