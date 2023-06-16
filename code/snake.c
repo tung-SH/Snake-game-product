@@ -66,12 +66,16 @@ snake snake_level_1_template(maze *maze_ptrV) {
     result.maze_game_ptr = maze_ptrV; 
     result.movement_direction = RIGHT; 
 
+    int central_maze = (result.maze_game_ptr->space_game_ptr->size) / 2; 
+
     int max_length_snake = SQR(result.maze_game_ptr->space_game_ptr->size - 1); 
-    {
+    {   
+
         point* snake_shape = (point*)malloc(max_length_snake * sizeof(point)); 
-        snake_shape[1 -1] = point_template(2, result.maze_game_ptr->space_game_ptr->size / 2); 
+        snake_shape[1 -1] = point_template(2, central_maze); 
+        snake_shape[2 -1] = point_template(2, central_maze - 1); 
         
-        result.body = shape_template(REPRESENT_SNAKE_BODY, 1, snake_shape); 
+        result.body = shape_template(REPRESENT_SNAKE_BODY, 2, snake_shape); 
     }
 
     #ifdef DEBUG_F10
@@ -80,7 +84,7 @@ snake snake_level_1_template(maze *maze_ptrV) {
 
     {
         point* snake_head = (point*)malloc(sizeof(point)); 
-        snake_head[1 -1] = point_template(2, result.maze_game_ptr->space_game_ptr->size / 2 + 1); 
+        snake_head[1 -1] = point_template(2, central_maze + 1); 
         
         result.head = shape_template(REPRESENT_SNAKE_HEAD, 1, snake_head); 
     }
@@ -186,7 +190,7 @@ point snake_get_upcomming_position(snake* snake_ptrV) {
 */
 void snake_move(snake* snake_ptrV) {
     #ifdef DEBUG_F8
-        printf("Snake before move ahead:\n%sMaze before snake move ahead:\n", snake_to_string(*snake_ptrV));
+        printf("--------Snake before move ahead--------:\n%sMaze before snake move ahead:\n", snake_to_string(*snake_ptrV));
         print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
     #endif
 
@@ -202,7 +206,7 @@ void snake_move(snake* snake_ptrV) {
     #endif
 
     /* phần đầu tiên của thân rắn trườn về vị trí cũ của đầu rắn */
-    (*snake_ptrV).body.points[(*snake_ptrV).body.num_point -1] = (*snake_ptrV).head.points[1 -1]; 
+    (*snake_ptrV).body.points[1 -1] = (*snake_ptrV).head.points[1 -1]; 
     
     #ifdef DEBUG_F8
         printf("Snake after whole body move ahead\n%s", snake_to_string(*snake_ptrV)); 
@@ -244,7 +248,8 @@ void snake_move(snake* snake_ptrV) {
 
     #ifdef DEBUG_F8
         printf("Maze after draw new snake:\n"); 
-        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
+        print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr));
+        printf("\n------end of snake move--------\n");  
     #endif
 
 }
@@ -301,7 +306,7 @@ void snake_turn_down(snake* snake_ptrV) {
 */
 void snake_grow(snake* snake_ptrV) {
     #ifdef DEBUG_F7
-        printf("Snake before grow:\n%sMaze before snake grow:\n", snake_to_string(*snake_ptrV)); 
+        printf("---------------- Snake before grow---------------------:\n%sMaze before snake grow:\n", snake_to_string(*snake_ptrV)); 
         print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
     #endif
 
@@ -323,6 +328,7 @@ void snake_grow(snake* snake_ptrV) {
     #ifdef DEBUG_F7
         printf("Snake after add new tail:\n%sMaze after snake add new tail:\n", snake_to_string(*snake_ptrV)); 
         print_space(*((*snake_ptrV).maze_game_ptr->space_game_ptr)); 
+        printf("\n-----------end of snake grow debug----------\n");
     #endif
 }
 
@@ -421,16 +427,15 @@ snake game_snake;
 apple game_apple; 
 
 int main(void) {
-    game_space = space_template(20); 
+    game_space = space_template(31); 
     game_maze = maze_level_1_template(&game_space); 
     game_apple = apple_template(&game_maze); 
     game_snake = snake_level_1_template(&game_maze); 
 
     while (1) {
-        if (_kbhit()) { /* IF ANY KEY IS PRESSED */
-            int ch = _getch(); 
+        if (_kbhit()) {
+        int ch = _getch(); 
 
-            /* CONTROL SNAKE */
             if (ch == UP_ARROW) {
                 snake_turn_up(&game_snake); 
             } else if (ch == DOWN_ARROW) {
@@ -440,25 +445,29 @@ int main(void) {
             } else if (ch == LEFT_ARROW) {
                 snake_turn_left(&game_snake); 
             } else if (ch == ESCAPE) {
-                break;  
+                ;  
             }
         }
 
         if (snake_is_going_crush_maze(&game_snake)) {
-            break; /* GAME OVER */
+            break; 
         } 
 
         if (snake_is_goint_to_eat_apple(&game_snake, &game_apple)) {
+
             snake_grow(&game_snake); 
             apple_random_without_onto_snake(&game_apple, &game_snake);
+
         } else {
-            snake_move(&game_snake);     
+            snake_move(&game_snake);
+
         }
 
         print_space(game_space); 
         wait_1ms(GAME_SPEED); 
         clrscr(); 
     }
+    /* có vấn đề ở khâu debug */ /* mình sẽ sửa lại debug để coi code rõ hơn nữa */
 
 
 
