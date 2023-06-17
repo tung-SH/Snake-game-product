@@ -55,7 +55,7 @@ typedef struct game game;
 game game_level_1_init(void) {
     game result; 
 
-    result.game_space = space_template(20); 
+    result.game_space = space_template(10); 
     result.game_maze = maze_level_1_template(&(result.game_space)); 
     result.game_apple = apple_template(&(result.game_maze)); 
     result.game_snake = snake_level_1_template(&(result.game_maze)); 
@@ -63,10 +63,17 @@ game game_level_1_init(void) {
     return result; 
 }; 
 
-game_status game_run(game* game_ptrV) {
+/************************************
+ * game_mode_1_run -- chạy game với 
+ *      chế độ diều khiển 4 phím 
+ * 
+ * example: 
+ * 
+*/
+game_status game_mode_1_run(game* game_ptrV) {
     game_status result; 
 
-    const int GAME_SPEED = 150; /* SPEED OF GAME IN MILI-SECONDS */
+    const int GAME_SPEED = 350; /* SPEED OF GAME IN MILI-SECONDS */
     const char UP_ARROW = 'w'; 
     const char DOWN_ARROW = 's'; 
     const char LEFT_ARROW = 'a'; 
@@ -116,6 +123,74 @@ game_status game_run(game* game_ptrV) {
     result = (*game_ptrV).status; 
     return result; 
 }
+
+/************************************
+ * game_mode_2_run -- chạy game với 
+ *      chế độ điều khiển 1 phím 
+ * 
+ * example: 
+ * 
+*/
+game_status game_mode_2_run(game* game_ptrV) {
+    game_status result; 
+
+    const int GAME_SPEED = 135; /* SPEED OF GAME IN MILI-SECONDS */
+    const char SPACE_KEY = 32; 
+    const char ESCAPE = 27; 
+
+    static int count_pressed_space = 0; /* count the number of times space is pressed */
+    
+    clrscr(); 
+    if (_kbhit()) {
+        int ch = _getch(); 
+    
+        if (ch == SPACE_KEY) {
+            ++count_pressed_space; 
+
+            if (count_pressed_space % 4 == 3) {
+                snake_turn_up(&((*game_ptrV).game_snake)); 
+            } else if (count_pressed_space % 4 == 1) {
+                snake_turn_down(&((*game_ptrV).game_snake)); 
+            } else if (count_pressed_space % 4 == 0) {
+                snake_turn_right(&((*game_ptrV).game_snake)); 
+            } else if (count_pressed_space % 4 == 2) {
+                snake_turn_left(&((*game_ptrV).game_snake)); 
+            } 
+
+        } else if (ch == ESCAPE) {
+            (*game_ptrV).status = OVER;  
+            count_pressed_space = 0; 
+        }
+    }
+
+    if (snake_is_going_crush_maze(&((*game_ptrV).game_snake))) {
+        (*game_ptrV).status = OVER; 
+        count_pressed_space = 0;
+    } 
+
+    if (snake_is_goint_to_eat_itself(&((*game_ptrV).game_snake))) {
+        (*game_ptrV).status = OVER; 
+        count_pressed_space = 0; 
+    }
+
+    if (snake_is_goint_to_eat_apple(&((*game_ptrV).game_snake), &((*game_ptrV).game_apple))) {
+
+        snake_grow(&((*game_ptrV).game_snake)); 
+        apple_random_without_onto_snake(&((*game_ptrV).game_apple), &((*game_ptrV).game_snake));
+
+    } else {
+        snake_move(&((*game_ptrV).game_snake));
+
+    }
+
+    print_space(*((*game_ptrV).game_maze.space_game_ptr)); 
+    wait_1ms(GAME_SPEED); 
+
+
+    result = (*game_ptrV).status; 
+    return result; 
+}
+
 
 #ifdef DEBUG_P3
 
