@@ -22,6 +22,10 @@
 
 #include "menu.c"
 
+const int TIME_TO_START_GAME = 3000; /* TIME FOR USER TO WAIT UNTIL THE GAME START */
+const int TIME_TO_DISPLAY_GAME_OVER_MENU = 4000; /* TIME TO DISPLAY GAME OVER MENU */
+
+
 game snake_game; 
 int user_choice; 
 
@@ -33,16 +37,16 @@ int main(void) {
         if (user_choice == 1) {
             while (1) {
                 static int count = 1; 
-                game_status status = game_mode_2_run(&snake_game);
+                game_status status = game_mode_1_run(&snake_game);
                 if (count == 1) {
-                    wait_1ms(3000);
+                    wait_1ms(TIME_TO_START_GAME);
                     ++count; 
                 }
                  
 
                 if (status == OVER) {
                     print_game_over(); 
-                    wait_1ms(4000); 
+                    wait_1ms(TIME_TO_DISPLAY_GAME_OVER_MENU); 
                     break; 
                 }
             }
